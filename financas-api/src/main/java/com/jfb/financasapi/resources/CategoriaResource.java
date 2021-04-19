@@ -37,18 +37,18 @@ public class CategoriaResource {
     return ResponseEntity.ok().body(listDto);
   }
 
+  @GetMapping(value = "/{id}")
+  public ResponseEntity<CategoriaDTO> findById(@PathVariable Long id) {
+    CategoriaDTO dto = service.findById(id);
+    return ResponseEntity.ok().body(dto);
+  }
+
   @PostMapping
   public ResponseEntity<CategoriaDTO> insert(@RequestBody CategoriaDTO dto) {
     dto = service.insert(dto);
     URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
       .buildAndExpand(dto.getId()).toUri();
     return ResponseEntity.created(uri).body(dto);
-  }
-
-  @GetMapping(value = "/{id}")
-  public ResponseEntity<CategoriaDTO> findById(@PathVariable Long id) {
-    CategoriaDTO dto = service.findById(id);
-    return ResponseEntity.ok().body(dto);
   }
 
 }
