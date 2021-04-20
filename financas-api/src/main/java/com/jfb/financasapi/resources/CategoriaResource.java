@@ -2,6 +2,8 @@ package com.jfb.financasapi.resources;
 
 import java.net.URI;
 
+import javax.validation.Valid;
+
 import com.jfb.financasapi.dto.CategoriaDTO;
 import com.jfb.financasapi.services.CategoriaService;
 
@@ -44,7 +46,7 @@ public class CategoriaResource {
   }
 
   @PostMapping
-  public ResponseEntity<CategoriaDTO> insert(@RequestBody CategoriaDTO dto) {
+  public ResponseEntity<CategoriaDTO> insert(@RequestBody @Valid CategoriaDTO dto) {
     dto = service.insert(dto);
     URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
       .buildAndExpand(dto.getId()).toUri();
