@@ -12,8 +12,8 @@ public class CategoriaDTO implements Serializable {
   
   private Long id;
 
-  @NotBlank(message = "Campo não pode está em branco ou sem preencimento")
-  @Size(min = 3, max = 20, message = "Nome deve ter entre 3 e 20 caracteres")
+  @Size(min = 3, max = 20)
+  @NotBlank
   private String nome;
 
   public CategoriaDTO() {
