@@ -32,4 +32,18 @@ public class PessoaService {
     return list.map(x -> new PessoaDTO(x));
   }
 
+  @Transactional
+  public PessoaDTO insert(PessoaDTO dto) {
+    Pessoa entity = new Pessoa();
+    copyDtoToEntity(dto, entity);
+    entity = repository.save(entity);
+    return new PessoaDTO(entity);
+  }
+
+  private void copyDtoToEntity(PessoaDTO dto, Pessoa entity) {
+    entity.setNome(dto.getNome());
+    entity.setAtivo(dto.getAtivo());
+    entity.setEndereco(dto.getEndereco());
+  }
+
 }
