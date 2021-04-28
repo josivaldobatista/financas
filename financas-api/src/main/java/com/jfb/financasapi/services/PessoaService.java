@@ -8,12 +8,14 @@ import com.jfb.financasapi.repositories.PessoaRepository;
 import com.jfb.financasapi.services.exceptions.ResourceNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PessoaService {
-  
+
   @Autowired
   private PessoaRepository repository;
 
@@ -22,6 +24,12 @@ public class PessoaService {
     Optional<Pessoa> obj = repository.findById(id);
     Pessoa entity = obj.orElseThrow(() -> new ResourceNotFoundException("Pessoa não encontrada"));
     return new PessoaDTO(entity);
+  }
+
+  @Transactional(readOnly = true)
+  public Page<PessoaDTO> findAll(PageRequest pageRequest) {
+    Page<Pessoa> list = repository.findAll(pageRequest);
+    return list.map(x -> new PessoaDTO(x));
   }
 
 }
