@@ -2,6 +2,8 @@ package com.jfb.financasapi.services;
 
 import java.util.Optional;
 
+import javax.persistence.EntityNotFoundException;
+
 import com.jfb.financasapi.dto.PessoaDTO;
 import com.jfb.financasapi.entities.Pessoa;
 import com.jfb.financasapi.repositories.PessoaRepository;
@@ -38,6 +40,18 @@ public class PessoaService {
     copyDtoToEntity(dto, entity);
     entity = repository.save(entity);
     return new PessoaDTO(entity);
+  }
+
+  @Transactional
+  public PessoaDTO update(Long id, PessoaDTO dto) {
+    try {
+      Pessoa entity = repository.getOne(id);
+      copyDtoToEntity(dto, entity);
+      entity = repository.save(entity);
+      return new PessoaDTO(entity);
+    } catch (EntityNotFoundException e) {
+      throw new ResourceNotFoundException("O id " + id + "não encontrado");
+    }
   }
 
   private void copyDtoToEntity(PessoaDTO dto, Pessoa entity) {
