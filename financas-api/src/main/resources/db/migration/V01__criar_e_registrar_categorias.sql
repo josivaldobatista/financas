@@ -1,4 +1,7 @@
-create table tb_categoria (id bigserial not null, nome varchar(20) not null, primary key (id));
+create table tb_categoria (
+  id bigserial not null, 
+  nome varchar(20) not null, 
+  primary key (id));
 
 INSERT INTO tb_categoria (nome) VALUES ('Lazer');
 INSERT INTO tb_categoria (nome) VALUES ('Alimentação');
