@@ -5,6 +5,7 @@ import java.time.Instant;
 import javax.servlet.http.HttpServletRequest;
 
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
+import com.jfb.financasapi.services.exceptions.DatabaseException;
 import com.jfb.financasapi.services.exceptions.ResourceNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,8 @@ public class ResourceExceptionHandler {
   }
 
   @ExceptionHandler(UnrecognizedPropertyException.class)
-  public ResponseEntity<StandardError> entityNotFound(UnrecognizedPropertyException e, HttpServletRequest request) {
+  public ResponseEntity<StandardError> unrecognizedProperty(UnrecognizedPropertyException e,
+      HttpServletRequest request) {
     HttpStatus status = HttpStatus.BAD_REQUEST;
     StandardError err = new StandardError();
     err.setTimestamp(Instant.now());
@@ -60,7 +62,18 @@ public class ResourceExceptionHandler {
     for (FieldError f : e.getBindingResult().getFieldErrors()) {
       err.addError(f.getField(), f.getDefaultMessage());
     }
+    return ResponseEntity.status(status).body(err);
+  }
 
+  @ExceptionHandler(DatabaseException.class)
+  public ResponseEntity<StandardError> databaseException(DatabaseException e, HttpServletRequest request) {
+    StandardError err = new StandardError();
+    HttpStatus status = HttpStatus.BAD_REQUEST;
+    err.setTimestamp(Instant.now());
+    err.setStatus(status.value());
+    err.setError("Database exception");
+    err.setMessage(e.getMessage());
+    err.setPath(request.getRequestURI());
     return ResponseEntity.status(status).body(err);
   }
 

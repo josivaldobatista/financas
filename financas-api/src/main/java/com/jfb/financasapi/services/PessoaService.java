@@ -7,9 +7,12 @@ import javax.persistence.EntityNotFoundException;
 import com.jfb.financasapi.dto.PessoaDTO;
 import com.jfb.financasapi.entities.Pessoa;
 import com.jfb.financasapi.repositories.PessoaRepository;
+import com.jfb.financasapi.services.exceptions.DatabaseException;
 import com.jfb.financasapi.services.exceptions.ResourceNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -51,6 +54,16 @@ public class PessoaService {
       return new PessoaDTO(entity);
     } catch (EntityNotFoundException e) {
       throw new ResourceNotFoundException("O id " + id + "não encontrado");
+    }
+  }
+
+  public void delete(Long id) {
+    try {
+      repository.deleteById(id);
+    } catch (EmptyResultDataAccessException e) {
+      throw new ResourceNotFoundException("O id " + id + " não encontrado");
+    } catch (DataIntegrityViolationException e) {
+      throw new DatabaseException("Violação de integridade");
     }
   }
 
